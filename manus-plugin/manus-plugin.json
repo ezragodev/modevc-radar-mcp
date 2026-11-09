@@ -1,0 +1,10 @@
+{
+  "name": "modevc-radar",
+  "display_name": "Mode VC: AI Venture Charts, Investor Atlas & Fundraising Tools",
+  "version": "2.2.0",
+  "description": "Query 45+ daily AI venture charts, search 3,651 VC firms and 13,040 partners, and run SAFE or Shopify Capital fundraising models.",
+  "openapi_url": "https://modevc.com/openapi.json",
+  "mcp_url": "https://modevc.com/api/mcp",
+  "homepage": "https://modevc.com",
+  "auth": "none"
+}
