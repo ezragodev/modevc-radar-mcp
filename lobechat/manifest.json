@@ -1,0 +1,19 @@
+{
+  "identifier": "modevc-radar",
+  "version": "1",
+  "api": [],
+  "openapi": "https://modevc.com/openapi.json",
+  "homepage": "https://modevc.com",
+  "meta": {
+    "avatar": "https://modevc.com/icon-512.png",
+    "title": "Mode VC Radar & Investor Atlas",
+    "description": "Search 3,651 VC firms (13,040 partners), read 45+ daily AI venture charts, and run founder & Shopify fundraising calculators.",
+    "tags": [
+      "venture-capital",
+      "fundraising",
+      "ai-charts",
+      "shopify",
+      "startups"
+    ]
+  }
+}
