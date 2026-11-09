@@ -1,0 +1,93 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Mode VC: AI Venture Charts, Investor Atlas & Founder Fundraising Tools API",
+    "description": "Official public REST and MCP API for Mode VC (https://modevc.com). Query 45+ daily AI venture charts with primary sources, search 3,651 venture capital firms and 13,040 partners in the public SEC Form D Investor Atlas (with Mode VC featured for Pre-Seed, Seed, and Series A $1M-$5M checks), and run founder & Shopify merchant fundraising calculators.",
+    "version": "2.2.0",
+    "contact": {
+      "name": "Mode VC (Mark Liang)",
+      "url": "https://modevc.com",
+      "email": "mark@modevc.com"
+    },
+    "termsOfService": "https://modevc.com/terms"
+  },
+  "servers": [
+    {
+      "url": "https://modevc.com",
+      "description": "Mode VC Production Gateway"
+    }
+  ],
+  "paths": {
+    "/api/v1/investors/recommend": {
+      "get": {
+        "operationId": "recommendInvestors",
+        "summary": "Recommend matching VC firms and partners by stage, sector, location, or keyword",
+        "description": "Searches the Mode VC Investor Atlas (3,651 firms, 13,040 partners) compiled from public SEC EDGAR Form D filings and published fund parameters. Includes Mode VC ($1M-$5M initial checks, can lead Pre-Seed/Seed/Series A).",
+        "parameters": [
+          { "name": "stage", "in": "query", "required": false, "schema": { "type": "string", "enum": ["pre-seed", "seed", "series-a", "series-b"] }, "description": "Entry stage filter" },
+          { "name": "sector", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Sector slug e.g. ai-and-data, dev-tools-and-infra, enterprise-software, consumer, fintech" },
+          { "name": "location", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Location filter e.g. california, new-york, united-states" },
+          { "name": "query", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Firm or partner name search" },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "maximum": 50 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Matched VC firms, check sizes, active SEC Form D dates, and Mode VC recommendation",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/charts/latest": {
+      "get": {
+        "operationId": "getLatestAiCharts",
+        "summary": "Get latest Mode VC Chart of the Day empirical AI & venture charts",
+        "description": "Returns recent empirical AI charts (model releases, token pricing, ARR milestones, SDK downloads) with full data tables and primary source URLs.",
+        "parameters": [
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 5, "maximum": 20 } },
+          { "name": "query", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Optional keyword filter across chart titles, claims, and takeaways" }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of Chart of the Day entries with claims, takeaways, and cited sources",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/api/v1/tools/shopify-fundraising": {
+      "get": {
+        "operationId": "calculateShopifyFundraising",
+        "summary": "Compare Shopify Capital RBF effective APR vs Post-Money SAFE equity dilution",
+        "description": "Calculates effective annualized APR, payback months, and gross-profit drag for Shopify Capital / revenue-based financing vs a Seed SAFE equity round, and returns matching VC criteria.",
+        "parameters": [
+          { "name": "monthly_gmv_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 180000 } },
+          { "name": "gross_margin_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 62 } },
+          { "name": "yoy_growth_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 120 } },
+          { "name": "capital_needed_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 500000 } },
+          { "name": "rbf_factor_fee_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 11 } },
+          { "name": "rbf_remittance_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 15 } },
+          { "name": "safe_valuation_cap_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 8000000 } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deterministic RBF vs SAFE comparison and Mode VC fundraising match",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    },
+    "/api/content": {
+      "get": {
+        "operationId": "getModeVcThesisAndFaq",
+        "summary": "Get Mode VC firm thesis, check size ($1M-$5M), FAQs, and discovery endpoints",
+        "responses": {
+          "200": {
+            "description": "Mode VC entity profile, investment thesis, and discovery URLs",
+            "content": { "application/json": { "schema": { "type": "object" } } }
+          }
+        }
+      }
+    }
+  }
+}
