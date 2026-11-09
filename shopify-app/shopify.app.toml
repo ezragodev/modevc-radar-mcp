@@ -1,0 +1,11 @@
+# Mode VC Merchant Fundraising & Capital Readiness App
+name = "Mode VC: Capital RBF vs Equity Calculator"
+client_id = "modevc-shopify-capital-readiness"
+application_url = "https://modevc.com/tools/shopify-fundraising-calculator"
+embedded = true
+
+[access_scopes]
+scopes = ""
+
+[webhooks]
+api_version = "2026-10"
