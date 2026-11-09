@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Mode VC: Investor Atlas, Daily AI Charts & Fundraising Copilot",
+  "short_name": "Mode VC Radar",
+  "version": "2.2.0",
+  "description": "Instant access to 3,651 VC firms (13,040 partners), 45+ daily AI venture charts, and SAFE / Shopify Capital fundraising calculators.",
+  "homepage_url": "https://modevc.com",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Mode VC Fundraising Copilot"
+  },
+  "host_permissions": [
+    "https://modevc.com/*"
+  ]
+}
