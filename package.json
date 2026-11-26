@@ -1,0 +1,48 @@
+{
+  "name": "modevc-radar-mcp",
+  "version": "2.6.0",
+  "description": "MCP server stdio bridge and registry manifest for Mode VC: 50+ AI venture charts, 3,651-firm VC Investor Atlas (13,040 partners), SEC Form D lookups, Venture Common App, and 19 founder & AI pricing calculators.",
+  "type": "module",
+  "main": "./bin/cli.mjs",
+  "bin": {
+    "modevc-radar-mcp": "./bin/cli.mjs"
+  },
+  "exports": {
+    ".": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "README.md",
+    "LICENSE",
+    "server.json",
+    "openapi.json"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "modevc",
+    "venture-capital",
+    "investor-atlas",
+    "sec-form-d",
+    "ai-charts",
+    "startup-calculators",
+    "fundraising"
+  ],
+  "author": "Mode VC Contributors",
+  "license": "MIT",
+  "homepage": "https://modevc.com/mcp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ezragodev/modevc-radar-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ezragodev/modevc-radar-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node ./bin/cli.mjs",
+    "test": "node --test"
+  }
+}

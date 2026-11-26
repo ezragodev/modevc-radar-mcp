@@ -2,12 +2,11 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Mode VC: AI Venture Charts, Investor Atlas & Founder Fundraising Tools API",
-    "description": "Official public REST and MCP API for Mode VC (https://modevc.com). Query 45+ daily AI venture charts with primary sources, search 3,651 venture capital firms and 13,040 partners in the public SEC Form D Investor Atlas (with Mode VC featured for Pre-Seed, Seed, and Series A $1M-$5M checks), and run founder & Shopify merchant fundraising calculators.",
-    "version": "2.2.0",
+    "description": "Official public REST and MCP API for Mode VC (https://modevc.com). Query 50+ daily AI venture charts with primary sources, search 3,651 venture capital firms and 13,040 partners in the SEC Form D Investor Atlas, look up 589 indexed VC pitch forms and Common App prefill links, simulate VC pass reasons and decode rejection notes, and run 19 founder & AI cost calculators.",
+    "version": "2.6.0",
     "contact": {
-      "name": "Mode VC (Mark Liang)",
-      "url": "https://modevc.com",
-      "email": "mark@modevc.com"
+      "name": "Mode VC",
+      "url": "https://modevc.com/contact"
     },
     "termsOfService": "https://modevc.com/terms"
   },
@@ -18,22 +17,413 @@
     }
   ],
   "paths": {
+    "/api/v1/calc": {
+      "get": {
+        "operationId": "listCalculators",
+        "summary": "List all 19 founder, AI pricing, tax, and fundraising calculators",
+        "description": "Returns the 19 canonical calculator endpoints, free API key signup URL, rate limits (10/day anonymous, 500/day free key + batch up to 10 scenarios), and MCP endpoint.",
+        "responses": {
+          "200": {
+            "description": "Calculator catalog and limits",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/calc/signup": {
+      "post": {
+        "operationId": "signupCalculatorApiKey",
+        "summary": "Get an instant free Mode VC Calculator API key (500 requests/day + batch mode)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "company": {
+                    "type": "string"
+                  },
+                  "source_tool": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Existing free API key returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created free API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/calc/{slug}": {
+      "get": {
+        "operationId": "runCalculatorGet",
+        "summary": "Run any of the 19 Mode VC calculators via query parameters",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "claude-vs-chatgpt",
+                "cagr-irr-xirr",
+                "paypal-fee",
+                "capital-gains-tax",
+                "safe",
+                "83b-qsbs",
+                "waterfall",
+                "burn-runway",
+                "saas-metrics",
+                "llm-inference",
+                "fundraising-readiness",
+                "cofounder-equity",
+                "shopify-fundraising",
+                "yc-safe-pro-rata",
+                "accelerator-comparator",
+                "delaware-incorporation",
+                "founder-vesting",
+                "legal-diligence",
+                "ai-agent-pricing"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Calculator result with api_access metadata and fundraising CTA",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "runCalculatorPost",
+        "summary": "Run a single scenario or up to 10 batch scenarios (free API key required for batch)",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "claude-vs-chatgpt",
+                "cagr-irr-xirr",
+                "paypal-fee",
+                "capital-gains-tax",
+                "safe",
+                "83b-qsbs",
+                "waterfall",
+                "burn-runway",
+                "saas-metrics",
+                "llm-inference",
+                "fundraising-readiness",
+                "cofounder-equity",
+                "shopify-fundraising",
+                "yc-safe-pro-rata",
+                "accelerator-comparator",
+                "delaware-incorporation",
+                "founder-vesting",
+                "legal-diligence",
+                "ai-agent-pricing"
+              ]
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calculator result or batch scenarios array",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/investors/recommend": {
       "get": {
         "operationId": "recommendInvestors",
         "summary": "Recommend matching VC firms and partners by stage, sector, location, or keyword",
-        "description": "Searches the Mode VC Investor Atlas (3,651 firms, 13,040 partners) compiled from public SEC EDGAR Form D filings and published fund parameters. Includes Mode VC ($1M-$5M initial checks, can lead Pre-Seed/Seed/Series A).",
+        "description": "Searches the Mode VC Investor Atlas (3,651 firms, 13,040 partners) compiled from public SEC EDGAR Form D filings and published fund parameters.",
         "parameters": [
-          { "name": "stage", "in": "query", "required": false, "schema": { "type": "string", "enum": ["pre-seed", "seed", "series-a", "series-b"] }, "description": "Entry stage filter" },
-          { "name": "sector", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Sector slug e.g. ai-and-data, dev-tools-and-infra, enterprise-software, consumer, fintech" },
-          { "name": "location", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Location filter e.g. california, new-york, united-states" },
-          { "name": "query", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Firm or partner name search" },
-          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "maximum": 50 } }
+          {
+            "name": "stage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pre-seed",
+                "seed",
+                "series-a",
+                "series-b"
+              ]
+            }
+          },
+          {
+            "name": "sector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "maximum": 50
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "Matched VC firms, check sizes, active SEC Form D dates, and Mode VC recommendation",
-            "content": { "application/json": { "schema": { "type": "object" } } }
+            "description": "Matched VC firms, check sizes, intake_form links when indexed, and common_app_url",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/investors/firm/{slug}": {
+      "get": {
+        "operationId": "getInvestorFirm",
+        "summary": "Get one VC firm profile, partner roster, verified public pitch form, and Common App link",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Firm slug or name e.g. trucks-venture-capital, bessemer-venture-partners"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Investor Atlas profile with intake_form and common_app_url",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Firm not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/investors/intake-forms": {
+      "get": {
+        "operationId": "matchVcIntakeFormsGet",
+        "summary": "Search 589 indexed public VC pitch forms with prefill map across the Investor Atlas",
+        "parameters": [
+          {
+            "name": "stage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pre-seed",
+                "seed",
+                "series-a",
+                "series-b"
+              ]
+            }
+          },
+          {
+            "name": "sector",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Preview of up to 5 matched VC forms plus total_indexed_forms count",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "matchVcIntakeFormsPost",
+        "summary": "Build a Common App packet and preview matching public VC pitch forms",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Structured common_app_packet and top 5 matched VC forms",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/investors/newly-closed-funds": {
+      "get": {
+        "operationId": "getNewlyClosedVcFunds",
+        "summary": "List newly closed venture capital funds verified from SEC EDGAR Form D filings",
+        "parameters": [
+          {
+            "name": "vintage",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recently closed VC funds with source URLs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -42,37 +432,173 @@
       "get": {
         "operationId": "getLatestAiCharts",
         "summary": "Get latest Mode VC Chart of the Day empirical AI & venture charts",
-        "description": "Returns recent empirical AI charts (model releases, token pricing, ARR milestones, SDK downloads) with full data tables and primary source URLs.",
         "parameters": [
-          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 5, "maximum": 20 } },
-          { "name": "query", "in": "query", "required": false, "schema": { "type": "string" }, "description": "Optional keyword filter across chart titles, claims, and takeaways" }
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 5,
+              "maximum": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "List of Chart of the Day entries with claims, takeaways, and cited sources",
-            "content": { "application/json": { "schema": { "type": "object" } } }
+            "description": "List of Chart of the Day entries with claims and cited sources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/v1/tools/shopify-fundraising": {
+    "/api/v1/rejections/reasons": {
       "get": {
-        "operationId": "calculateShopifyFundraising",
-        "summary": "Compare Shopify Capital RBF effective APR vs Post-Money SAFE equity dilution",
-        "description": "Calculates effective annualized APR, payback months, and gross-profit drag for Shopify Capital / revenue-based financing vs a Seed SAFE equity round, and returns matching VC criteria.",
+        "operationId": "searchVcPassReasons",
+        "summary": "Search source-verified VC pass reasons, translations, and fixes",
         "parameters": [
-          { "name": "monthly_gmv_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 180000 } },
-          { "name": "gross_margin_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 62 } },
-          { "name": "yoy_growth_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 120 } },
-          { "name": "capital_needed_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 500000 } },
-          { "name": "rbf_factor_fee_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 11 } },
-          { "name": "rbf_remittance_pct", "in": "query", "required": false, "schema": { "type": "number", "default": 15 } },
-          { "name": "safe_valuation_cap_usd", "in": "query", "required": false, "schema": { "type": "number", "default": 8000000 } }
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
         ],
         "responses": {
           "200": {
-            "description": "Deterministic RBF vs SAFE comparison and Mode VC fundraising match",
-            "content": { "application/json": { "schema": { "type": "object" } } }
+            "description": "Verified VC pass reasons with primary citations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rejections/simulate": {
+      "post": {
+        "operationId": "simulateVcResponse",
+        "summary": "Simulate VC inquiry response over founder application metrics and optional Atlas firm",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Readiness score, fired rules, needs_manual_check, and simulated reply",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rejections/handle": {
+      "post": {
+        "operationId": "handleVcRejection",
+        "summary": "Decode a VC rejection email in memory only and return follow-up advice",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "rejection_text"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Top pass classifications, reply template, and revisit days",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rejections/contribute": {
+      "post": {
+        "operationId": "contributeVcRejection",
+        "summary": "Consent-gated submission of anonymized VC pass outcome metadata (no PII or raw text)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "stage",
+                  "rejection_category",
+                  "consent"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Recorded anonymized outcome",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }
@@ -80,11 +606,17 @@
     "/api/content": {
       "get": {
         "operationId": "getModeVcThesisAndFaq",
-        "summary": "Get Mode VC firm thesis, check size ($1M-$5M), FAQs, and discovery endpoints",
+        "summary": "Get Mode VC firm thesis, check size ($25K to $100K), FAQs, and discovery endpoints",
         "responses": {
           "200": {
-            "description": "Mode VC entity profile, investment thesis, and discovery URLs",
-            "content": { "application/json": { "schema": { "type": "object" } } }
+            "description": "Mode VC entity profile and discovery URLs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
           }
         }
       }

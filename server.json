@@ -2,11 +2,11 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.modevc/radar",
   "title": "Mode VC: AI Venture Charts, Investor Atlas and Founder Calculators",
-  "description": "AI venture charts (39 so far), a 3,650-firm VC atlas and 8 founder calculators. Free, read-only.",
-  "version": "2.1.0",
+  "description": "50+ AI venture charts, a 3,651-firm VC atlas (13,040 partners), newly closed VC funds, Venture Common App pitch form matching, VC pass decoder, and 19 founder, AI pricing, payments, tax, investing, YC deal, and legal calculators. Free; read-only except consent-gated actions.",
+  "version": "2.6.0",
   "websiteUrl": "https://modevc.com",
   "repository": {
-    "url": "https://github.com/alexbuilding/modevc-radar-mcp",
+    "url": "https://github.com/ezragodev/modevc-radar-mcp",
     "source": "github"
   },
   "remotes": [

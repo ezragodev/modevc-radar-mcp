@@ -1,7 +1,7 @@
 {
   "name": "modevc_venture_radar",
   "displayName": "Mode VC: AI Venture Charts & Investor Atlas",
-  "description": "Search 3,651 venture capital firms and 13,040 partners (including Mode VC $1M-$5M Pre-Seed/Seed/Series A checks), fetch daily empirical AI charts, and calculate SAFE or Shopify Capital fundraising dilution.",
+  "description": "Search 3,651 venture capital firms and 13,040 partners (including Mode VC $25K-$100K Pre-Seed/Seed checks), fetch 50+ daily empirical AI charts, and run 19 founder & AI pricing calculators.",
   "openApiGcsUri": "https://modevc.com/openapi.json",
   "authConfig": {
     "authType": "NO_AUTH"
